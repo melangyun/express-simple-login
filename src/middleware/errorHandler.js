@@ -1,6 +1,4 @@
-function errorHandler (error, req, res, next) {
-  console.error(error);
-
+export default function errorHandler (error, req, res, next) {
   const status = error.code ?? 500;
 
   res.status(status).json({
@@ -11,5 +9,3 @@ function errorHandler (error, req, res, next) {
     date: new Date()
   });
 };
-
-export default errorHandler;

@@ -1,16 +1,30 @@
 import jwt from 'jsonwebtoken';
 
-import userRepository from '../repository/userMemoryRepository.js';
+// import userRepository from '../repository/userMemoryRepository.js';
+import userRepository from '../repository/userPrismaRepository.js';
 
-function register (user) {
-  checkIfUserExists(user.email);
-  const registeredUser = userRepository.save(user);
-  return registeredUser;
+async function register (user, prisma) {
+  const existedUser = await userRepository.findByEmail(user.email, prisma);
+  if (existedUser) {
+    const error = new Error('User already exists');
+    error.code = 422;
+    error.data = { email: user.email };
+    throw error;
+  }
+
+  return await userRepository.save(user, prisma);
 }
 
-function login (email, password) {
-  const user = userRepository.findByEmail(email);
-  checkIfUserDoesNotExist(email);
+async function login (email, password, prisma) {
+  const user = await userRepository.findByEmail(email, prisma);
+  console.log(user);
+  if (!user) {
+    const error = new Error('User not found');
+    error.code = 404;
+    error.data = { email };
+    throw error;
+  }
+
   checkPassword(password, user.password);
 
   const token = jwt.sign(
@@ -22,8 +36,8 @@ function login (email, password) {
   return token;
 }
 
-function getUsers () {
-  return userRepository.getUsers();
+async function getUsers (prisma) {
+  return userRepository.getUsers(prisma);
 }
 
 export default {
@@ -31,26 +45,6 @@ export default {
   register,
   getUsers
 };
-
-function checkIfUserExists (email) {
-  const user = userRepository.findByEmail(email);
-  if (user) {
-    const error = new Error('User already exists');
-    error.code = 422;
-    error.data = { email };
-    throw error;
-  }
-};
-
-function checkIfUserDoesNotExist (email) {
-  const user = userRepository.findByEmail(email);
-  if (!user) {
-    const error = new Error('User not found');
-    error.code = 404;
-    error.data = { email };
-    throw error;
-  }
-}
 
 function checkPassword (plain, hashed) {
   if (plain !== hashed) {
