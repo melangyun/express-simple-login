@@ -12,12 +12,7 @@ async function save (user, prisma) {
   });
 }
 
-async function getUsers (prisma) {
-  return await prisma.user.findMany();
-}
-
 export default {
   findByEmail,
-  save,
-  getUsers
+  save
 };

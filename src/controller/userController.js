@@ -14,15 +14,6 @@ userController.post('/users/register', async (req, res, next) => {
 }
 );
 
-userController.get('/users', async (req, res, next) => {
-  try {
-    const users = await userService.getUsers(req.prisma);
-    res.send(users);
-  } catch (error) {
-    next(error);
-  }
-});
-
 userController.post('/login', async (req, res, next) => {
   try {
     const token = await userService.login(req.body.email, req.body.password, req.prisma);
@@ -31,7 +22,7 @@ userController.post('/login', async (req, res, next) => {
       httpOnly: true,
       expires: new Date(Date.now() + 900000)
     });
-    res.send(token);
+    res.status(201).json({ token });
   } catch (error) {
     next(error);
   }

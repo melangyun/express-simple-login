@@ -1,6 +1,5 @@
 import 'dotenv/config';
 import express, { json } from 'express';
-// import expressjwt from 'express-jwt';
 import cookieParser from 'cookie-parser';
 import { PrismaClient } from '@prisma/client';
 
@@ -14,11 +13,6 @@ const port = process.env.PORT ?? 3000;
 const prisma = new PrismaClient();
 
 app.use(json());
-// app.use(expressjwt({
-//   secret: process.env.JWT_SECRET,
-//   algorithms: ['HS256'],
-//   credentialsRequired: false
-// }));
 app.use(cookieParser());
 
 // attach prisma to request

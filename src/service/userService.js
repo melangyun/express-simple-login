@@ -35,14 +35,9 @@ async function login (email, password, prisma) {
   return token;
 }
 
-async function getUsers (prisma) {
-  return userRepository.getUsers(prisma);
-}
-
 export default {
   login,
-  register,
-  getUsers
+  register
 };
 
 function checkPassword (plain, hashed) {
