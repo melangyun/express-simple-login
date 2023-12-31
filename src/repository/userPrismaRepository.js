@@ -7,7 +7,8 @@ async function save (user, prisma) {
     data: {
       email: user.email,
       name: user.name,
-      password: user.password
+      password: user.password,
+      salt: user.salt
     }
   });
 }

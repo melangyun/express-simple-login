@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
-// import userRepository from '../repository/userMemoryRepository.js';
 import userRepository from '../repository/userPrismaRepository.js';
 
 async function register (user, prisma) {
   const existedUser = await userRepository.findByEmail(user.email, prisma);
+
   if (existedUser) {
     const error = new Error('User already exists');
     error.code = 422;
@@ -12,7 +13,10 @@ async function register (user, prisma) {
     throw error;
   }
 
-  return await userRepository.save(user, prisma);
+  const salt = createSalt();
+  const hashedPassword = hashingPassword(user.password, salt);
+  const createdUser = await userRepository.save({ ...user, password: hashedPassword, salt }, prisma);
+  return { id: createdUser.id, email: createdUser.email, name: createdUser.name };
 }
 
 async function login (email, password, prisma) {
@@ -24,7 +28,7 @@ async function login (email, password, prisma) {
     throw error;
   }
 
-  checkPassword(password, user.password);
+  checkPassword(password, user.salt, user.password);
 
   const token = jwt.sign(
     { id: user.id },
@@ -40,10 +44,19 @@ export default {
   register
 };
 
-function checkPassword (plain, hashed) {
-  if (plain !== hashed) {
+function checkPassword (plain, salt, hashed) {
+  const hashedPassword = hashingPassword(plain, salt);
+  if (hashedPassword !== hashed) {
     const error = new Error('Incorrect password');
     error.code = 401;
     throw error;
   }
+}
+
+function hashingPassword (password, salt) {
+  return crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
+}
+
+function createSalt () {
+  return crypto.randomBytes(16).toString('hex');
 }
