@@ -4,7 +4,7 @@ import userService from '../service/userService.js';
 
 const userController = express.Router();
 
-userController.post('/register', async (req, res, next) => {
+userController.post('/users/register', async (req, res, next) => {
   try {
     const registeredUser = await userService.register(req.body, req.prisma);
     res.send(registeredUser);

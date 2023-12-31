@@ -5,6 +5,8 @@ import cookieParser from 'cookie-parser';
 import { PrismaClient } from '@prisma/client';
 
 import userController from './controller/userController.js';
+import productController from './controller/productController.js';
+import reviewController from './controller/reviewController.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
@@ -31,6 +33,8 @@ app.get('/', (req, res) => {
 
 // 라우터
 app.use('', userController);
+app.use('/products', productController);
+app.use('/reviews', reviewController);
 
 // 에러 핸들러
 app.use(errorHandler);

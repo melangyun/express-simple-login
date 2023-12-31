@@ -17,7 +17,6 @@ async function register (user, prisma) {
 
 async function login (email, password, prisma) {
   const user = await userRepository.findByEmail(email, prisma);
-  console.log(user);
   if (!user) {
     const error = new Error('User not found');
     error.code = 404;

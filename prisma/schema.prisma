@@ -17,23 +17,27 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  posts     Post[]
+  reviews   Review[]
 }
 
 model Product {
   id        Int      @id @default(autoincrement())
   name      String
   price     Float
+  reviews   Review[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+model Review {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  rating      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  product     Product  @relation(fields: [productId], references: [id])
+  productId   Int
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
 }
