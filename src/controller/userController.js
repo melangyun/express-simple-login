@@ -1,6 +1,10 @@
+import express from 'express';
+
 import userService from '../service/userService.js';
 
-async function register (req, res, next) {
+const userController = express.Router();
+
+userController.post('/register', async (req, res, next) => {
   try {
     const registeredUser = await userService.register(req.body, req.prisma);
     res.send(registeredUser);
@@ -8,8 +12,18 @@ async function register (req, res, next) {
     next(error);
   }
 }
+);
 
-async function login (req, res, next) {
+userController.get('/users', async (req, res, next) => {
+  try {
+    const users = await userService.getUsers(req.prisma);
+    res.send(users);
+  } catch (error) {
+    next(error);
+  }
+});
+
+userController.post('/login', async (req, res, next) => {
   try {
     const token = await userService.login(req.body.email, req.body.password, req.prisma);
     res.cookie('token', token, {
@@ -21,19 +35,6 @@ async function login (req, res, next) {
   } catch (error) {
     next(error);
   }
-}
+});
 
-async function getUsers (req, res, next) {
-  try {
-    const users = await userService.getUsers(req.prisma);
-    res.send(users);
-  } catch (error) {
-    next(error);
-  }
-}
-
-export default {
-  register,
-  login,
-  getUsers
-};
+export default userController;

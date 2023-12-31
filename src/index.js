@@ -4,7 +4,7 @@ import express, { json } from 'express';
 import cookieParser from 'cookie-parser';
 import { PrismaClient } from '@prisma/client';
 
-import userRouter from './router/userRouter.js';
+import userController from './controller/userController.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
@@ -29,8 +29,8 @@ app.get('/', (req, res) => {
   res.send('Hello, World!');
 });
 
-// 유저 라우터
-app.use('', userRouter);
+// 라우터
+app.use('', userController);
 
 // 에러 핸들러
 app.use(errorHandler);
