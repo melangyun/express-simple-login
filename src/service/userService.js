@@ -24,7 +24,6 @@ async function login (email, password, prisma) {
   if (!user) {
     const error = new Error('User not found');
     error.code = 404;
-    error.data = { email };
     throw error;
   }
 
@@ -39,9 +38,27 @@ async function login (email, password, prisma) {
   return token;
 }
 
+async function renewToken (userId, prisma) {
+  const user = await userRepository.findById(userId, prisma);
+  if (!user) {
+    const error = new Error('User not found');
+    error.code = 404;
+    throw error;
+  }
+
+  const token = jwt.sign(
+    { id: user.id },
+    process.env.JWT_SECRET,
+    { expiresIn: '1h' }
+  );
+
+  return token;
+}
+
 export default {
   login,
-  register
+  register,
+  renewToken
 };
 
 function checkPassword (plain, salt, hashed) {
