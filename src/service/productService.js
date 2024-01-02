@@ -1,12 +1,12 @@
 import productRepository from '../repository/productRepository.js';
 
-async function register (product, prisma) {
-  const createdProduct = await productRepository.save(product, prisma);
+async function register (product) {
+  const createdProduct = await productRepository.save(product);
   return createdProduct;
 }
 
-async function getById (id, prisma) {
-  const product = await productRepository.getById(id, prisma);
+async function getById (id) {
+  const product = await productRepository.getById(id);
   return product;
 }
 

@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import express, { json } from 'express';
 import cookieParser from 'cookie-parser';
-import { PrismaClient } from '@prisma/client';
-import session from 'express-session';
+// import session from 'express-session';
+// import passport from 'passport';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bodyParser from 'body-parser';
@@ -14,23 +14,23 @@ import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 const port = process.env.PORT ?? 3000;
-const prisma = new PrismaClient();
 
 app.use(json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+/*
+// express-session 사용
 app.set('trust proxy', 1);
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }));
+*/
 
-app.use((req, _, next) => {
-  req.prisma = prisma;
-  next();
-});
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.get('/', (req, res) => {
   const __dirname = dirname(fileURLToPath(import.meta.url));

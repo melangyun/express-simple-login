@@ -1,4 +1,6 @@
-async function getById (id, prisma) {
+import prisma from './prismaClient.js';
+
+async function getById (id) {
   const product = await prisma.product.findUnique({
     where: {
       id: parseInt(id)
@@ -7,7 +9,7 @@ async function getById (id, prisma) {
   return product;
 }
 
-async function save (product, prisma) {
+async function save (product) {
   const createdProduct = await prisma.product.create({
     data: {
       name: product.name,

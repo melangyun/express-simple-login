@@ -10,7 +10,7 @@ reviewController.post('/',
   authMiddleware.checkAccessToken,
   async (req, res, next) => {
     try {
-      const createdReview = await reviewService.register({ ...req.body, authorId: req.user.id }, req.prisma);
+      const createdReview = await reviewService.register({ ...req.body, authorId: req.user.id });
       res.status(201).send(createdReview);
     } catch (error) {
       next(error);
@@ -20,7 +20,7 @@ reviewController.post('/',
 reviewController.get('/:id',
   async (req, res, next) => {
     try {
-      const review = await reviewService.getReview(req.params.id, req.prisma);
+      const review = await reviewService.getReview(req.params.id);
       res.send(review);
     } catch (error) {
       next(error);
@@ -29,7 +29,7 @@ reviewController.get('/:id',
 
 reviewController.get('/', async (req, res, next) => {
   try {
-    const reviews = await reviewService.getReviews(req.prisma);
+    const reviews = await reviewService.getReviews();
     res.send(reviews);
   } catch (error) {
     next(error);
@@ -41,7 +41,7 @@ reviewController.put('/:id',
   authMiddleware.checkReviewAuth,
   async (req, res, next) => {
     try {
-      const updatedReview = await reviewService.updateReview(req.params.id, req.body, req.prisma);
+      const updatedReview = await reviewService.updateReview(req.params.id, req.body);
       res.send(updatedReview);
     } catch (error) {
       next(error);
@@ -53,7 +53,7 @@ reviewController.delete('/:id',
   authMiddleware.checkReviewAuth,
   async (req, res, next) => {
     try {
-      const deletedReview = await reviewService.deleteReview(req.params.id, req.prisma);
+      const deletedReview = await reviewService.deleteReview(req.params.id);
       res.send(deletedReview);
     } catch (error) {
       next(error);

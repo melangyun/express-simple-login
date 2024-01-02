@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 
-import userRepository from '../repository/userPrismaRepository.js';
+import userRepository from '../repository/userRepository.js';
 
-async function register (user, prisma) {
-  const existedUser = await userRepository.findByEmail(user.email, prisma);
+async function register (user) {
+  const existedUser = await userRepository.findByEmail(user.email);
 
   if (existedUser) {
     const error = new Error('User already exists');
@@ -15,26 +15,26 @@ async function register (user, prisma) {
 
   const salt = createSalt();
   const hashedPassword = hashingPassword(user.password, salt);
-  const createdUser = await userRepository.save({ ...user, password: hashedPassword, salt }, prisma);
+  const createdUser = await userRepository.save({ ...user, password: hashedPassword, salt });
   return filterSensitiveUserData(createdUser);
 }
 
-async function sessionLogin (email, password, prisma) {
-  const user = await userRepository.findByEmail(email, prisma);
+async function sessionLogin (email, password) {
+  const user = await userRepository.findByEmail(email);
   if (!user) {
     const error = new Error('User not found');
-    error.code = 404;
+    error.code = 401;
     throw error;
   }
   checkPassword(password, user.salt, user.password);
   return filterSensitiveUserData(user);
 }
 
-async function login (email, password, prisma) {
-  const user = await userRepository.findByEmail(email, prisma);
+async function login (email, password) {
+  const user = await userRepository.findByEmail(email);
   if (!user) {
-    const error = new Error('User not found');
-    error.code = 404;
+    const error = new Error('Unauthorized');
+    error.code = 401;
     throw error;
   }
 
@@ -46,11 +46,11 @@ async function login (email, password, prisma) {
   return { accessToken, refreshToken };
 }
 
-async function renewToken (userId, prisma) {
-  const user = await userRepository.findById(userId, prisma);
+async function renewToken (userId) {
+  const user = await userRepository.findById(userId);
   if (!user) {
-    const error = new Error('User not found');
-    error.code = 404;
+    const error = new Error('Unauthorized');
+    error.code = 401;
     throw error;
   }
 
@@ -90,7 +90,7 @@ function signJwt (payload, type) {
 function checkPassword (plain, salt, hashed) {
   const hashedPassword = hashingPassword(plain, salt);
   if (hashedPassword !== hashed) {
-    const error = new Error('Incorrect password');
+    const error = new Error('Unauthorized');
     error.code = 401;
     throw error;
   }

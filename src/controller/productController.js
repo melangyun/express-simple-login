@@ -13,12 +13,12 @@ productController.get('/register',
 productController.post('/',
   authMiddleware.checkSessionLogin,
   async (req, res, next) => {
-    const createdProduct = await productService.register(req.body, req.prisma);
+    const createdProduct = await productService.register(req.body);
     res.send(createdProduct);
   });
 
 productController.get('/:id', async (req, res, next) => {
-  const product = await productService.getById(req.params.id, req.prisma);
+  const product = await productService.getById(req.params.id);
   res.send(product);
 });
 

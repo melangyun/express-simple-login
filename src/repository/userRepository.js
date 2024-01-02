@@ -1,8 +1,10 @@
-async function findByEmail (email, prisma) {
+import prisma from './prismaClient.js';
+
+async function findByEmail (email) {
   return await prisma.user.findUnique({ where: { email } });
 }
 
-async function save (user, prisma) {
+async function save (user) {
   return await prisma.user.create({
     data: {
       email: user.email,

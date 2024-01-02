@@ -7,7 +7,7 @@ const userController = express.Router();
 
 userController.post('/users/register', async (req, res, next) => {
   try {
-    const registeredUser = await userService.register(req.body, req.prisma);
+    const registeredUser = await userService.register(req.body);
     res.status(201).send(registeredUser);
   } catch (error) {
     next(error);
@@ -17,7 +17,7 @@ userController.post('/users/register', async (req, res, next) => {
 
 userController.post('/login', async (req, res, next) => {
   try {
-    const { accessToken, refreshToken } = await userService.login(req.body.email, req.body.password, req.prisma);
+    const { accessToken, refreshToken } = await userService.login(req.body.email, req.body.password);
     res.cookie('token', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
     res.json({ accessToken });
   } catch (error) {
@@ -29,7 +29,7 @@ userController.post('/renew-token',
   authMiddleware.checkRefreshToken,
   async (req, res, next) => {
     try {
-      const token = await userService.renewToken(req.user.id, req.prisma);
+      const token = await userService.renewToken(req.user.id);
       res.json({ token });
     } catch (error) {
       next(error);
@@ -38,7 +38,7 @@ userController.post('/renew-token',
 
 userController.post('/session-login', async (req, res, next) => {
   try {
-    const user = await userService.sessionLogin(req.body.email, req.body.password, req.prisma);
+    const user = await userService.sessionLogin(req.body.email, req.body.password);
     req.session.userId = user.id;
     res.redirect('/products/register');
   } catch (error) {

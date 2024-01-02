@@ -2,9 +2,9 @@ import { expressjwt } from 'express-jwt';
 
 import reviewRepository from '../repository/reviewRepository.js';
 
-async function checkReviewAuth (req, res, next) {
+async function checkReviewAuth (req, _, next) {
   try {
-    const review = await reviewRepository.getReview(req.params.id, req.prisma);
+    const review = await reviewRepository.getReview(req.params.id);
     if (review.authorId !== req.user.id) {
       const error = new Error('Forbidden');
       error.code = 403;
