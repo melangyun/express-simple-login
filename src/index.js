@@ -1,8 +1,6 @@
 import 'dotenv/config';
 import express, { json } from 'express';
 import cookieParser from 'cookie-parser';
-// import session from 'express-session';
-// import passport from 'passport';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bodyParser from 'body-parser';
@@ -18,19 +16,6 @@ const port = process.env.PORT ?? 3000;
 app.use(json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-/*
-// express-session 사용
-app.set('trust proxy', 1);
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true
-}));
-*/
-
-// app.use(passport.initialize());
-// app.use(passport.session());
 
 app.get('/', (req, res) => {
   const __dirname = dirname(fileURLToPath(import.meta.url));
