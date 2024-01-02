@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from 'passport';
 
 import authMiddleware from '../middleware/authMiddleware.js';
 import userService from '../service/userService.js';
@@ -36,14 +37,10 @@ userController.post('/renew-token',
     }
   });
 
-userController.post('/session-login', async (req, res, next) => {
-  try {
-    const user = await userService.sessionLogin(req.body.email, req.body.password);
-    req.session.userId = user.id;
-    res.redirect('/products/register');
-  } catch (error) {
-    next(error);
-  }
-});
+userController.post('/session-login',
+  passport.authenticate('local', {
+    successRedirect: '/products/register'
+  })
+);
 
 export default userController;
