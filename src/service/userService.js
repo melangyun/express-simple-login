@@ -16,7 +16,18 @@ async function register (user, prisma) {
   const salt = createSalt();
   const hashedPassword = hashingPassword(user.password, salt);
   const createdUser = await userRepository.save({ ...user, password: hashedPassword, salt }, prisma);
-  return { id: createdUser.id, email: createdUser.email, name: createdUser.name };
+  return filterSensitiveUserData(createdUser);
+}
+
+async function sessionLogin (email, password, prisma) {
+  const user = await userRepository.findByEmail(email, prisma);
+  if (!user) {
+    const error = new Error('User not found');
+    error.code = 404;
+    throw error;
+  }
+  checkPassword(password, user.salt, user.password);
+  return filterSensitiveUserData(user);
 }
 
 async function login (email, password, prisma) {
@@ -50,9 +61,15 @@ async function renewToken (userId, prisma) {
 
 export default {
   login,
+  sessionLogin,
   register,
   renewToken
 };
+
+function filterSensitiveUserData (user) {
+  const { password, salt, ...rest } = user;
+  return rest;
+}
 
 function signJwt (payload, type) {
   if (type === 'refresh') {

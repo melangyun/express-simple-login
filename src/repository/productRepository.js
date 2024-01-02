@@ -12,7 +12,7 @@ async function save (product, prisma) {
     data: {
       name: product.name,
       description: product.description,
-      price: product.price
+      price: parseInt(product.price)
     }
   });
   return createdProduct;
