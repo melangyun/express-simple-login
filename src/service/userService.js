@@ -29,13 +29,10 @@ async function login (email, password, prisma) {
 
   checkPassword(password, user.salt, user.password);
 
-  const token = jwt.sign(
-    { id: user.id },
-    process.env.JWT_SECRET,
-    { expiresIn: '1h' }
-  );
+  const accessToken = signJwt({ id: user.id });
+  const refreshToken = signJwt({ id: user.id }, 'refresh');
 
-  return token;
+  return { accessToken, refreshToken };
 }
 
 async function renewToken (userId, prisma) {
@@ -46,11 +43,7 @@ async function renewToken (userId, prisma) {
     throw error;
   }
 
-  const token = jwt.sign(
-    { id: user.id },
-    process.env.JWT_SECRET,
-    { expiresIn: '1h' }
-  );
+  const token = signJwt({ id: user.id });
 
   return token;
 }
@@ -60,6 +53,22 @@ export default {
   register,
   renewToken
 };
+
+function signJwt (payload, type) {
+  if (type === 'refresh') {
+    return jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: '2w' }
+    );
+  }
+
+  return jwt.sign(
+    payload,
+    process.env.JWT_SECRET,
+    { expiresIn: '1h' }
+  );
+}
 
 function checkPassword (plain, salt, hashed) {
   const hashedPassword = hashingPassword(plain, salt);

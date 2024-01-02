@@ -7,7 +7,7 @@ import reviewService from '../service/reviewService.js';
 const reviewController = express.Router();
 
 reviewController.post('/',
-  authMiddleware.jwtCheck,
+  authMiddleware.checkAccessToken,
   async (req, res, next) => {
     try {
       const createdReview = await reviewService.register({ ...req.body, authorId: req.user.id }, req.prisma);
@@ -37,7 +37,7 @@ reviewController.get('/', async (req, res, next) => {
 });
 
 reviewController.put('/:id',
-  authMiddleware.jwtCheck,
+  authMiddleware.checkAccessToken,
   authMiddleware.checkReviewAuth,
   async (req, res, next) => {
     try {
@@ -49,7 +49,7 @@ reviewController.put('/:id',
   });
 
 reviewController.delete('/:id',
-  authMiddleware.jwtCheck,
+  authMiddleware.checkAccessToken,
   authMiddleware.checkReviewAuth,
   async (req, res, next) => {
     try {

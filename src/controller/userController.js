@@ -17,15 +17,16 @@ userController.post('/users/register', async (req, res, next) => {
 
 userController.post('/login', async (req, res, next) => {
   try {
-    const token = await userService.login(req.body.email, req.body.password, req.prisma);
-    res.status(201).json({ token });
+    const { accessToken, refreshToken } = await userService.login(req.body.email, req.body.password, req.prisma);
+    res.cookie('token', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
+    res.status(201).json({ accessToken });
   } catch (error) {
     next(error);
   }
 });
 
-userController.post('/user/renew-token',
-  authMiddleware.jwtCheck,
+userController.post('/renew-token',
+  authMiddleware.checkRefreshToken,
   async (req, res, next) => {
     try {
       const token = await userService.renewToken(req.user.id, req.prisma);
@@ -36,5 +37,3 @@ userController.post('/user/renew-token',
   });
 
 export default userController;
-
-// TODO: refresh token, 세션기반 로그인

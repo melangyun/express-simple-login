@@ -15,13 +15,21 @@ async function checkReviewAuth (req, res, next) {
     next(error);
   }
 }
-const jwtCheck = expressjwt({
+const checkAccessToken = expressjwt({
   secret: process.env.JWT_SECRET,
   algorithms: ['HS256'],
   requestProperty: 'user'
 });
 
+const checkRefreshToken = expressjwt({
+  secret: process.env.JWT_SECRET,
+  algorithms: ['HS256'],
+  requestProperty: 'user',
+  getToken: (req) => req.cookies.token
+});
+
 export default {
   checkReviewAuth,
-  jwtCheck
+  checkAccessToken,
+  checkRefreshToken
 };
