@@ -89,7 +89,7 @@ function signJwt (payload, type) {
 
 function checkPassword (plain, salt, hashed) {
   const hashedPassword = hashingPassword(plain, salt);
-  if (hashedPassword !== hashed) {
+  if (!crypto.timingSafeEqual(Buffer.from(hashed), Buffer.from(hashedPassword))) {
     const error = new Error('Unauthorized');
     error.code = 401;
     throw error;

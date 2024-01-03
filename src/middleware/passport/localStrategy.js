@@ -1,6 +1,6 @@
 import { Strategy as LocalStrategy } from 'passport-local';
 
-import userService from '../service/userService.js';
+import userService from '../../service/userService.js';
 
 const localStrategy = new LocalStrategy(
   {
@@ -10,7 +10,6 @@ const localStrategy = new LocalStrategy(
   async (email, password, done) => {
     try {
       const user = await userService.sessionLogin(email, password);
-      console.log(user);
       return done(null, user.id);
     } catch (error) {
       return done(error);

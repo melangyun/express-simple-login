@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import passport from 'passport';
 
 import authMiddleware from '../middleware/authMiddleware.js';
 import reviewService from '../service/reviewService.js';
@@ -37,7 +38,8 @@ reviewController.get('/', async (req, res, next) => {
 });
 
 reviewController.put('/:id',
-  authMiddleware.checkAccessToken,
+  // authMiddleware.checkAccessToken,
+  passport.authenticate('access-token', { session: false }),
   authMiddleware.checkReviewAuth,
   async (req, res, next) => {
     try {

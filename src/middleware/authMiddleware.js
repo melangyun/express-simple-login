@@ -38,7 +38,7 @@ function checkSessionLogin (req, res, next) {
   next();
 }
 
-function passportSessionLogin (req, res, next) {
+function passportAuthenticateSession (req, res, next) {
   // passport 에서 제공하는 isAuthenticated 메소드를 사용하여 인증 여부를 확인
   if (req.isAuthenticated()) {
     return next();
@@ -51,5 +51,5 @@ export default {
   checkSessionLogin,
   checkAccessToken,
   checkRefreshToken,
-  passportSessionLogin
+  passportAuthenticateSession
 };

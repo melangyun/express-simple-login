@@ -11,7 +11,7 @@ productController.get('/register',
   });
 
 productController.post('/',
-  authMiddleware.passportSessionLogin,
+  authMiddleware.passportAuthenticateSession,
   async (req, res, next) => {
     const createdProduct = await productService.register(req.body);
     res.send(createdProduct);

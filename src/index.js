@@ -6,12 +6,11 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bodyParser from 'body-parser';
 
-import passport from './passport/passport.js';
+import passport from './middleware/passport/passport.js';
 import userController from './controller/userController.js';
 import productController from './controller/productController.js';
 import reviewController from './controller/reviewController.js';
 import errorHandler from './middleware/errorHandler.js';
-
 
 const app = express();
 const port = process.env.PORT ?? 3000;

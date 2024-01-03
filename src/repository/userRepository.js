@@ -1,5 +1,9 @@
 import prisma from './prismaClient.js';
 
+async function findById (id) {
+  return await prisma.user.findUnique({ where: { id } });
+}
+
 async function findByEmail (email) {
   return await prisma.user.findUnique({ where: { email } });
 }
@@ -16,6 +20,7 @@ async function save (user) {
 }
 
 export default {
+  findById,
   findByEmail,
   save
 };
