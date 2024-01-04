@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
+import bcrypt from 'bcrypt';
 
 import userRepository from '../repository/userRepository.js';
 
@@ -13,9 +13,8 @@ async function register (user) {
     throw error;
   }
 
-  const salt = createSalt();
-  const hashedPassword = hashingPassword(user.password, salt);
-  const createdUser = await userRepository.save({ ...user, password: hashedPassword, salt });
+  const hashedPassword = await hashingPassword(user.password);
+  const createdUser = await userRepository.save({ ...user, password: hashedPassword });
   return filterSensitiveUserData(createdUser);
 }
 
@@ -26,7 +25,7 @@ async function sessionLogin (email, password) {
     error.code = 401;
     throw error;
   }
-  checkPassword(password, user.salt, user.password);
+  await checkPassword(password, user.password);
   return filterSensitiveUserData(user);
 }
 
@@ -37,8 +36,7 @@ async function login (email, password) {
     error.code = 401;
     throw error;
   }
-
-  checkPassword(password, user.salt, user.password);
+  await checkPassword(password, user.password);
 
   const accessToken = signJwt({ id: user.id });
   const refreshToken = signJwt({ id: user.id }, 'refresh');
@@ -67,7 +65,7 @@ export default {
 };
 
 function filterSensitiveUserData (user) {
-  const { password, salt, ...rest } = user;
+  const { password, ...rest } = user;
   return rest;
 }
 
@@ -87,19 +85,16 @@ function signJwt (payload, type) {
   );
 }
 
-function checkPassword (plain, salt, hashed) {
-  const hashedPassword = hashingPassword(plain, salt);
-  if (!crypto.timingSafeEqual(Buffer.from(hashed), Buffer.from(hashedPassword))) {
+async function checkPassword (plain, hashed) {
+  const isMatch = await bcrypt.compare(plain, hashed);
+  if (!isMatch) {
     const error = new Error('Unauthorized');
     error.code = 401;
     throw error;
   }
 }
 
-function hashingPassword (password, salt) {
-  return crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
-}
-
-function createSalt () {
-  return crypto.randomBytes(16).toString('hex');
+async function hashingPassword (password) {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
 }

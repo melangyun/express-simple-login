@@ -13,8 +13,7 @@ async function save (user) {
     data: {
       email: user.email,
       name: user.name,
-      password: user.password,
-      salt: user.salt
+      password: user.password
     }
   });
 }
