@@ -18,8 +18,16 @@ async function save (user) {
   });
 }
 
+async function saveRefreshToken (userId, token) {
+  return await prisma.user.update({
+    where: { id: userId },
+    data: { refreshToken: token }
+  });
+}
+
 export default {
   findById,
   findByEmail,
-  save
+  save,
+  saveRefreshToken
 };

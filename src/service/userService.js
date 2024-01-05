@@ -40,21 +40,22 @@ async function login (email, password) {
 
   const accessToken = signJwt({ id: user.id });
   const refreshToken = signJwt({ id: user.id }, 'refresh');
-
+  await saveRefreshToken(user.id, refreshToken);
   return { accessToken, refreshToken };
 }
 
-async function renewToken (userId) {
+async function renewToken (userId, old) {
   const user = await userRepository.findById(userId);
-  if (!user) {
+  if (!user?.refreshToken !== old) {
     const error = new Error('Unauthorized');
     error.code = 401;
     throw error;
   }
 
-  const token = signJwt({ id: user.id });
-
-  return token;
+  const accessToken = signJwt({ id: user.id });
+  const refreshToken = signJwt({ id: user.id, type: 'refresh' });
+  await saveRefreshToken(user.id, refreshToken);
+  return { accessToken, refreshToken };
 }
 
 export default {
@@ -83,6 +84,10 @@ function signJwt (payload, type) {
     process.env.JWT_SECRET,
     { expiresIn: '1h' }
   );
+}
+
+async function saveRefreshToken (userId, token) {
+  await userRepository.saveRefreshToken(userId, token);
 }
 
 async function checkPassword (plain, hashed) {

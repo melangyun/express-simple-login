@@ -32,8 +32,11 @@ userController.post('/renew-token',
   passport.authenticate('refresh-token', { failureFlash: true }),
   async (req, res, next) => {
     try {
-      const token = await userService.renewToken(req.user.id);
-      res.json({ token });
+      const oldRefreshToken = req.cookies.token;
+      const { accessToken, refreshToken } = await userService.renewToken(req.user.id, oldRefreshToken);
+      res.cookie('token', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
+      res.header('Authorization', `Bearer ${accessToken}`);
+      res.json({ accessToken });
     } catch (error) {
       next(error);
     }
