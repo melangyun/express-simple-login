@@ -2,8 +2,6 @@ import 'dotenv/config';
 import express, { json } from 'express';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 import bodyParser from 'body-parser';
 
 import passport from './middleware/passport/passport.js';
@@ -26,11 +24,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.get('/', (req, res) => {
-  const __dirname = dirname(fileURLToPath(import.meta.url));
-  res.sendFile(__dirname + '/public/index.html');
-});
 
 // 라우터
 app.use('', userController);

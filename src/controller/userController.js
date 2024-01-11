@@ -43,9 +43,16 @@ userController.post('/renew-token',
   });
 
 userController.post('/session-login',
-  passport.authenticate('local', {
-    successRedirect: '/products/register'
-  })
+  passport.authenticate('local')
+  // async (req, res, next) => {
+  //   try {
+  //     const user = await userService.sessionLogin(req.body.email, req.body.password);
+  //     req.session.userId = user.id;
+  //     res.json(user);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 );
 
 export default userController;
