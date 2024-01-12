@@ -29,7 +29,7 @@ const checkRefreshToken = expressjwt({
 });
 
 function checkSessionLogin (req, res, next) {
-  if (!req.session.userId) {
+  if (!req.session?.userId) {
     const error = new Error('Unauthorized');
     error.code = 401;
     throw error;
