@@ -30,9 +30,7 @@ const checkRefreshToken = expressjwt({
 
 function checkSessionLogin (req, res, next) {
   if (!req.session?.userId) {
-    const error = new Error('Unauthorized');
-    error.code = 401;
-    throw error;
+    throwUnauthorizedError();
   }
   req.user = { id: req.session.userId };
   next();
@@ -43,7 +41,13 @@ function passportAuthenticateSession (req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/');
+  throwUnauthorizedError();
+}
+
+function throwUnauthorizedError () { // 인증되지 않은 경우 401 에러를 발생시키는 함수
+  const error = new Error('Unauthorized');
+  error.code = 401;
+  throw error;
 }
 
 export default {
