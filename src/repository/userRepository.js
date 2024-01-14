@@ -25,9 +25,18 @@ async function saveRefreshToken (userId, token) {
   });
 }
 
+async function findOrCreate (provider, providerId, email, name) {
+  return await prisma.user.upsert({
+    where: { provider, providerId },
+    update: { email, name },
+    create: { provider, providerId, email, name }
+  });
+}
+
 export default {
   findById,
   findByEmail,
   save,
-  saveRefreshToken
+  saveRefreshToken,
+  findOrCreate
 };

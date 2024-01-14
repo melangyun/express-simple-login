@@ -38,10 +38,7 @@ async function login (email, password) {
   }
   await checkPassword(password, user.password);
 
-  const accessToken = signJwt({ id: user.id });
-  const refreshToken = signJwt({ id: user.id }, 'refresh');
-  await saveRefreshToken(user.id, refreshToken);
-  return { accessToken, refreshToken };
+  return await generateJWT(user.id);
 }
 
 async function renewToken (userId, old) {
@@ -52,21 +49,31 @@ async function renewToken (userId, old) {
     throw error;
   }
 
-  const accessToken = signJwt({ id: user.id });
-  const refreshToken = signJwt({ id: user.id, type: 'refresh' });
-  await saveRefreshToken(user.id, refreshToken);
-  return { accessToken, refreshToken };
+  return await generateJWT(user.id);
 }
 
+async function googleRegisterOrUpdate (provider, providerId, email, name) {
+  const user = await userRepository.findOrCreate(provider, providerId, email, name);
+  return filterSensitiveUserData(user);
+}
+
+async function generateJWT (userId) {
+  const accessToken = signJwt({ id: userId });
+  const refreshToken = signJwt({ id: userId }, 'refresh');
+  await saveRefreshToken(userId, refreshToken);
+  return { accessToken, refreshToken };
+}
 export default {
   login,
   sessionLogin,
   register,
-  renewToken
+  renewToken,
+  googleRegisterOrUpdate,
+  generateJWT
 };
 
 function filterSensitiveUserData (user) {
-  const { password, ...rest } = user;
+  const { password, refreshToken, provider, providerId, ...rest } = user;
   return rest;
 }
 

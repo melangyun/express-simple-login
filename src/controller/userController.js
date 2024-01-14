@@ -53,4 +53,12 @@ userController.post('/session-login',
   // }
 );
 
+userController.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+userController.get('/auth/google/callback', passport.authenticate('google'), async (req, res, next) => {
+  const { accessToken, refreshToken } = await userService.generateJWT(req.user.id);
+  res.cookie('token', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
+  res.json({ accessToken });
+});
+
 export default userController;
