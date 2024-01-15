@@ -3,6 +3,7 @@ import passport from 'passport';
 import localStrategy from './localStrategy.js';
 import jwtStrategy from './jwtStrategy.js';
 import googleStrategy from './googleStrategy.js';
+import kakaoStrategy from './kakaoStrategy.js';
 
 // jwt
 passport.use('access-token', jwtStrategy.accessTokenStrategy);
@@ -20,5 +21,7 @@ passport.deserializeUser(async (userId, done) => { done(null, userId); });
 
 // google
 passport.use(googleStrategy);
+// kakao
+passport.use(kakaoStrategy);
 
 export default passport;

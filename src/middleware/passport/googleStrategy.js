@@ -10,7 +10,7 @@ const googleStrategyOptions = {
 
 export default new GoogleStrategy(googleStrategyOptions,
   async (accessToken, refreshToken, profile, done) => {
-    const user = await userService.googleRegisterOrUpdate(profile.provider, profile.id, profile.emails[0].value, profile.displayName);
+    const user = await userService.oAuthRegisterOrUpdate(profile.provider, profile.id, profile.emails[0].value, profile.displayName);
     done(null, user);
   }
 );

@@ -52,7 +52,7 @@ async function renewToken (userId, old) {
   return await generateJWT(user.id);
 }
 
-async function googleRegisterOrUpdate (provider, providerId, email, name) {
+async function oAuthRegisterOrUpdate (provider, providerId, email, name) {
   const user = await userRepository.findOrCreate(provider, providerId, email, name);
   return filterSensitiveUserData(user);
 }
@@ -68,7 +68,7 @@ export default {
   sessionLogin,
   register,
   renewToken,
-  googleRegisterOrUpdate,
+  oAuthRegisterOrUpdate,
   generateJWT
 };
 
