@@ -69,4 +69,11 @@ userController.get('/auth/kakao/callback', passport.authenticate('kakao'), async
   res.json({ accessToken });
 });
 
+userController.get('/auth/naver', passport.authenticate('naver'));
+userController.get('/auth/naver/callback', passport.authenticate('naver'), async (req, res, next) => {
+  const { accessToken, refreshToken } = await userService.generateJWT(req.user.id);
+  res.cookie('token', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
+  res.json({ accessToken });
+});
+
 export default userController;

@@ -4,6 +4,7 @@ import localStrategy from './localStrategy.js';
 import jwtStrategy from './jwtStrategy.js';
 import googleStrategy from './googleStrategy.js';
 import kakaoStrategy from './kakaoStrategy.js';
+import naverStrategy from './naverStrategy.js';
 
 // jwt
 passport.use('access-token', jwtStrategy.accessTokenStrategy);
@@ -23,5 +24,7 @@ passport.deserializeUser(async (userId, done) => { done(null, userId); });
 passport.use(googleStrategy);
 // kakao
 passport.use(kakaoStrategy);
+// naver
+passport.use(naverStrategy);
 
 export default passport;
