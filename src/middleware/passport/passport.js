@@ -2,9 +2,6 @@ import passport from 'passport';
 
 import localStrategy from './localStrategy.js';
 import jwtStrategy from './jwtStrategy.js';
-import googleStrategy from './googleStrategy.js';
-import kakaoStrategy from './kakaoStrategy.js';
-import naverStrategy from './naverStrategy.js';
 
 // jwt
 passport.use('access-token', jwtStrategy.accessTokenStrategy);
@@ -19,12 +16,5 @@ passport.serializeUser((userId, done) => { done(null, userId); });
 // 이전 구현의 authMiddleware의 checkSessionLogin
 // req.user = { id: req.session.userId }; 와 동일
 passport.deserializeUser(async (userId, done) => { done(null, userId); });
-
-// google
-passport.use(googleStrategy);
-// kakao
-passport.use(kakaoStrategy);
-// naver
-passport.use(naverStrategy);
 
 export default passport;

@@ -6,8 +6,6 @@ import productService from '../service/productService.js';
 const productController = express.Router();
 
 productController.post('/',
-  authMiddleware.passportAuthenticateSession,
-  // authMiddleware.checkSessionLogin,
   async (req, res, next) => {
     const createdProduct = await productService.register(req.body);
     res.send(createdProduct);
