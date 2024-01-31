@@ -25,7 +25,7 @@ async function sessionLogin (email, password) {
     error.code = 401;
     throw error;
   }
-  await checkPassword(password, user.password);
+  await validatePassword(password, user.password);
   return filterSensitiveUserData(user);
 }
 
@@ -36,7 +36,7 @@ async function login (email, password) {
     error.code = 401;
     throw error;
   }
-  await checkPassword(password, user.password);
+  await validatePassword(password, user.password);
 
   return await generateJWT(user.id);
 }
@@ -97,7 +97,7 @@ async function saveRefreshToken (userId, token) {
   await userRepository.saveRefreshToken(userId, token);
 }
 
-async function checkPassword (plain, hashed) {
+async function validatePassword (plain, hashed) {
   const isMatch = await bcrypt.compare(plain, hashed);
   if (!isMatch) {
     const error = new Error('Unauthorized');
