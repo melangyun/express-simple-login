@@ -1,14 +1,14 @@
-import 'dotenv/config';
-import express, { json } from 'express';
-import cookieParser from 'cookie-parser';
-import session from 'express-session';
-import bodyParser from 'body-parser';
+import "dotenv/config";
+import express, { json } from "express";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import bodyParser from "body-parser";
 
-import passport from './middleware/passport/passport.js';
-import userController from './controller/userController.js';
-import productController from './controller/productController.js';
-import reviewController from './controller/reviewController.js';
-import errorHandler from './middleware/errorHandler.js';
+import passport from "./middleware/passport/passport.js";
+import userController from "./controller/userController.js";
+import productController from "./controller/productController.js";
+import reviewController from "./controller/reviewController.js";
+import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
@@ -17,18 +17,20 @@ app.use(json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  }),
+);
 app.use(passport.initialize());
 app.use(passport.session());
 
 // 라우터
-app.use('', userController);
-app.use('/products', productController);
-app.use('/reviews', reviewController);
+app.use("", userController);
+app.use("/products", productController);
+app.use("/reviews", reviewController);
 
 // 에러 핸들러
 app.use(errorHandler);

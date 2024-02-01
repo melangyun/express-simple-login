@@ -1,6 +1,6 @@
-import prisma from './prismaClient.js';
+import prisma from "./prismaClient.js";
 
-async function save (review) {
+async function save(review) {
   const createdReview = await prisma.review.create({
     data: {
       title: review.title,
@@ -8,52 +8,52 @@ async function save (review) {
       rating: review.rating,
       product: {
         connect: {
-          id: review.productId
-        }
+          id: review.productId,
+        },
       },
       author: {
         connect: {
-          id: review.authorId
-        }
-      }
-    }
+          id: review.authorId,
+        },
+      },
+    },
   });
   return createdReview;
 }
 
-async function getReview (id) {
+async function getReview(id) {
   const review = await prisma.review.findUnique({
     where: {
-      id: parseInt(id)
-    }
+      id: parseInt(id),
+    },
   });
   return review;
 }
 
-async function getReviews () {
+async function getReviews() {
   const reviews = await prisma.review.findMany();
   return reviews;
 }
 
-async function updateReview (id, review) {
+async function updateReview(id, review) {
   const updatedReview = await prisma.review.update({
     where: {
-      id: parseInt(id)
+      id: parseInt(id),
     },
     data: {
       title: review.title,
       description: review.description,
-      rating: review.rating
-    }
+      rating: review.rating,
+    },
   });
   return updatedReview;
 }
 
-async function deleteReview (id) {
+async function deleteReview(id) {
   const deletedReview = await prisma.review.delete({
     where: {
-      id: parseInt(id)
-    }
+      id: parseInt(id),
+    },
   });
   return deletedReview;
 }
@@ -63,5 +63,5 @@ export default {
   getReview,
   getReviews,
   updateReview,
-  deleteReview
+  deleteReview,
 };

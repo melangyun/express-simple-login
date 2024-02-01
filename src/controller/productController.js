@@ -5,15 +5,17 @@ import productService from '../service/productService.js';
 
 const productController = express.Router();
 
-productController.post('/',
+productController.post(
+  '/',
   authMiddleware.passportAuthenticateSession,
   // authMiddleware.checkSessionLogin,
-  async (req, res, next) => {
+  async (req, res) => {
     const createdProduct = await productService.register(req.body);
     res.send(createdProduct);
-  });
+  },
+);
 
-productController.get('/:id', async (req, res, next) => {
+productController.get('/:id', async (req, res) => {
   const product = await productService.getById(req.params.id);
   res.send(product);
 });

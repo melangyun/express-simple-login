@@ -13,35 +13,51 @@ userController.post('/users/register', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
-);
+});
 
 userController.post('/login', async (req, res, next) => {
   try {
-    const { accessToken, refreshToken } = await userService.login(req.body.email, req.body.password);
-    res.cookie('token', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
+    const { accessToken, refreshToken } = await userService.login(
+      req.body.email,
+      req.body.password,
+    );
+    res.cookie('token', refreshToken, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
     res.json({ accessToken });
   } catch (error) {
     next(error);
   }
 });
 
-userController.post('/renew-token',
+userController.post(
+  '/renew-token',
   // authMiddleware.checkRefreshToken,
   passport.authenticate('refresh-token', { failureFlash: true }),
   async (req, res, next) => {
     try {
       const oldRefreshToken = req.cookies.token;
-      const { accessToken, refreshToken } = await userService.renewToken(req.user.id, oldRefreshToken);
-      res.cookie('token', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
+      const { accessToken, refreshToken } = await userService.renewToken(
+        req.user.id,
+        oldRefreshToken,
+      );
+      res.cookie('token', refreshToken, {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      });
       res.json({ accessToken });
     } catch (error) {
       next(error);
     }
-  });
+  },
+);
 
-userController.post('/session-login',
-  passport.authenticate('local')
+userController.post(
+  '/session-login',
+  passport.authenticate('local'),
   // async (req, res, next) => {
   //   try {
   //     const user = await userService.sessionLogin(req.body.email, req.body.password);
@@ -53,27 +69,60 @@ userController.post('/session-login',
   // }
 );
 
-userController.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+userController.get(
+  '/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] }),
+);
 
-userController.get('/auth/google/callback', passport.authenticate('google'), async (req, res, next) => {
-  const { accessToken, refreshToken } = await userService.generateJWT(req.user.id);
-  res.cookie('token', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
-  res.json({ accessToken });
-});
+userController.get(
+  '/auth/google/callback',
+  passport.authenticate('google'),
+  async (req, res, next) => {
+    const { accessToken, refreshToken } = await userService.generateJWT(
+      req.user.id,
+    );
+    res.cookie('token', refreshToken, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.json({ accessToken });
+  },
+);
 
 userController.get('/auth/kakao', passport.authenticate('kakao'));
 
-userController.get('/auth/kakao/callback', passport.authenticate('kakao'), async (req, res, next) => {
-  const { accessToken, refreshToken } = await userService.generateJWT(req.user.id);
-  res.cookie('token', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
-  res.json({ accessToken });
-});
+userController.get(
+  '/auth/kakao/callback',
+  passport.authenticate('kakao'),
+  async (req, res, next) => {
+    const { accessToken, refreshToken } = await userService.generateJWT(
+      req.user.id,
+    );
+    res.cookie('token', refreshToken, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.json({ accessToken });
+  },
+);
 
 userController.get('/auth/naver', passport.authenticate('naver'));
-userController.get('/auth/naver/callback', passport.authenticate('naver'), async (req, res, next) => {
-  const { accessToken, refreshToken } = await userService.generateJWT(req.user.id);
-  res.cookie('token', refreshToken, { httpOnly: true, sameSite: 'none', secure: true });
-  res.json({ accessToken });
-});
+userController.get(
+  '/auth/naver/callback',
+  passport.authenticate('naver'),
+  async (req, res, next) => {
+    const { accessToken, refreshToken } = await userService.generateJWT(
+      req.user.id,
+    );
+    res.cookie('token', refreshToken, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.json({ accessToken });
+  },
+);
 
 export default userController;

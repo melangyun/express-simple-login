@@ -1,26 +1,26 @@
-import prisma from './prismaClient.js';
+import prisma from "./prismaClient.js";
 
-async function getById (id) {
+async function getById(id) {
   const product = await prisma.product.findUnique({
     where: {
-      id: parseInt(id)
-    }
+      id: parseInt(id),
+    },
   });
   return product;
 }
 
-async function save (product) {
+async function save(product) {
   const createdProduct = await prisma.product.create({
     data: {
       name: product.name,
       description: product.description,
-      price: parseInt(product.price)
-    }
+      price: parseInt(product.price),
+    },
   });
   return createdProduct;
 }
 
 export default {
   getById,
-  save
+  save,
 };
