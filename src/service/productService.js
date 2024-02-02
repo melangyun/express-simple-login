@@ -1,4 +1,4 @@
-import productRepository from "../repository/productRepository.js";
+import productRepository from '../repository/productRepository.js';
 
 async function register(product) {
   const createdProduct = await productRepository.save(product);

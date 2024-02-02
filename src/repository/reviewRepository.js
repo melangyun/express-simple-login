@@ -1,4 +1,4 @@
-import prisma from "./prismaClient.js";
+import prisma from './prismaClient.js';
 
 async function save(review) {
   const createdReview = await prisma.review.create({
@@ -24,7 +24,7 @@ async function save(review) {
 async function getReview(id) {
   const review = await prisma.review.findUnique({
     where: {
-      id: parseInt(id),
+      id: parseInt(id, 10),
     },
   });
   return review;
@@ -38,7 +38,7 @@ async function getReviews() {
 async function updateReview(id, review) {
   const updatedReview = await prisma.review.update({
     where: {
-      id: parseInt(id),
+      id: parseInt(id, 10),
     },
     data: {
       title: review.title,
@@ -52,7 +52,7 @@ async function updateReview(id, review) {
 async function deleteReview(id) {
   const deletedReview = await prisma.review.delete({
     where: {
-      id: parseInt(id),
+      id: parseInt(id, 10),
     },
   });
   return deletedReview;

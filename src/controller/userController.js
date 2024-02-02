@@ -77,7 +77,7 @@ userController.get(
 userController.get(
   '/auth/google/callback',
   passport.authenticate('google'),
-  async (req, res, next) => {
+  async (req, res) => {
     const { accessToken, refreshToken } = await userService.generateJWT(
       req.user.id,
     );
@@ -95,7 +95,7 @@ userController.get('/auth/kakao', passport.authenticate('kakao'));
 userController.get(
   '/auth/kakao/callback',
   passport.authenticate('kakao'),
-  async (req, res, next) => {
+  async (req, res) => {
     const { accessToken, refreshToken } = await userService.generateJWT(
       req.user.id,
     );
@@ -112,7 +112,7 @@ userController.get('/auth/naver', passport.authenticate('naver'));
 userController.get(
   '/auth/naver/callback',
   passport.authenticate('naver'),
-  async (req, res, next) => {
+  async (req, res) => {
     const { accessToken, refreshToken } = await userService.generateJWT(
       req.user.id,
     );

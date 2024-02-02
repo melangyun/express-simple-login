@@ -1,17 +1,17 @@
-import passport from "passport";
+import passport from 'passport';
 
-import localStrategy from "./localStrategy.js";
-import jwtStrategy from "./jwtStrategy.js";
-import googleStrategy from "./googleStrategy.js";
-import kakaoStrategy from "./kakaoStrategy.js";
-import naverStrategy from "./naverStrategy.js";
+import localStrategy from './localStrategy.js';
+import jwtStrategy from './jwtStrategy.js';
+import googleStrategy from './googleStrategy.js';
+import kakaoStrategy from './kakaoStrategy.js';
+import naverStrategy from './naverStrategy.js';
 
 // jwt
-passport.use("access-token", jwtStrategy.accessTokenStrategy);
-passport.use("refresh-token", jwtStrategy.refreshTokenStrategy);
+passport.use('access-token', jwtStrategy.accessTokenStrategy);
+passport.use('refresh-token', jwtStrategy.refreshTokenStrategy);
 
 // session
-passport.use("local", localStrategy);
+passport.use('local', localStrategy);
 // 사용자 객체를 식별자로 변환하여 세션에 저장
 // 이전 구현의 `/session-login`에서 req.session.userId = user.id; 와 같음
 passport.serializeUser((userId, done) => {

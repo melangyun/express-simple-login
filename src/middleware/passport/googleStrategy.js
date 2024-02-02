@@ -1,11 +1,11 @@
-import GoogleStrategy from "passport-google-oauth20";
+import GoogleStrategy from 'passport-google-oauth20';
 
-import userService from "../../service/userService.js";
+import userService from '../../service/userService.js';
 
 const googleStrategyOptions = {
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "/auth/google/callback",
+  callbackURL: '/auth/google/callback',
 };
 
 export default new GoogleStrategy(

@@ -1,11 +1,11 @@
-import { Strategy } from "passport-kakao";
+import { Strategy } from 'passport-kakao';
 
-import userService from "../../service/userService.js";
+import userService from '../../service/userService.js';
 
 const kakaoStrategyOptions = {
   clientID: process.env.KAKAO_CLIENT_ID,
   clientSecret: process.env.KAKAO_CLIENT_SECRET,
-  callbackURL: "/auth/kakao/callback",
+  callbackURL: '/auth/kakao/callback',
 };
 
 export default new Strategy(
@@ -15,7 +15,7 @@ export default new Strategy(
     const user = await userService.oAuthRegisterOrUpdate(
       profile.provider,
       `${profile.id}`,
-      "",
+      profile.emails?.[0]?.value || '',
       profile.displayName,
     );
     done(null, user);
