@@ -3,7 +3,6 @@ import express, { json } from 'express';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 
-import passport from './middleware/passport/passport.js';
 import userController from './controller/userController.js';
 import productController from './controller/productController.js';
 import reviewController from './controller/reviewController.js';
@@ -22,8 +21,6 @@ app.use(
     saveUninitialized: true,
   }),
 );
-app.use(passport.initialize());
-app.use(passport.session());
 
 // 라우터
 app.use('', userController);

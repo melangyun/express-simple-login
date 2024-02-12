@@ -35,14 +35,6 @@ function throwUnauthorizedError() {
   throw error;
 }
 
-function passportAuthenticateSession(req, res, next) {
-  // passport 에서 제공하는 isAuthenticated 메소드를 사용하여 인증 여부를 확인
-  if (!req.isAuthenticated()) {
-    throwUnauthorizedError();
-  }
-  return next();
-}
-
 function checkSessionLogin(req, res, next) {
   if (!req.session?.userId) {
     throwUnauthorizedError();
@@ -56,5 +48,4 @@ export default {
   checkSessionLogin,
   checkAccessToken,
   checkRefreshToken,
-  passportAuthenticateSession,
 };

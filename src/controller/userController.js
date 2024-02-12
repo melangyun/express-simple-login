@@ -1,7 +1,5 @@
 import express from 'express';
-import passport from 'passport';
 
-// import authMiddleware from '../middleware/authMiddleware.js';
 import userService from '../service/userService.js';
 
 const userController = express.Router();
@@ -32,32 +30,26 @@ userController.post('/login', async (req, res, next) => {
   }
 });
 
-userController.post(
-  '/renew-token',
-  // authMiddleware.checkRefreshToken,
-  passport.authenticate('refresh-token', { failureFlash: true }),
-  async (req, res, next) => {
-    try {
-      const oldRefreshToken = req.cookies.token;
-      const { accessToken, refreshToken } = await userService.renewToken(
-        req.user.id,
-        oldRefreshToken,
-      );
-      res.cookie('token', refreshToken, {
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true,
-      });
-      res.json({ accessToken });
-    } catch (error) {
-      next(error);
-    }
-  },
-);
+userController.post('/renew-token', async (req, res, next) => {
+  try {
+    const oldRefreshToken = req.cookies.token;
+    const { accessToken, refreshToken } = await userService.renewToken(
+      req.user.id,
+      oldRefreshToken,
+    );
+    res.cookie('token', refreshToken, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.json({ accessToken });
+  } catch (error) {
+    next(error);
+  }
+});
 
 userController.post(
   '/session-login',
-  passport.authenticate('local'),
   // async (req, res, next) => {
   //   try {
   //     const user = await userService.sessionLogin(req.body.email, req.body.password);
@@ -67,62 +59,6 @@ userController.post(
   //     next(error);
   //   }
   // }
-);
-
-userController.get(
-  '/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] }),
-);
-
-userController.get(
-  '/auth/google/callback',
-  passport.authenticate('google'),
-  async (req, res) => {
-    const { accessToken, refreshToken } = await userService.generateJWT(
-      req.user.id,
-    );
-    res.cookie('token', refreshToken, {
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true,
-    });
-    res.json({ accessToken });
-  },
-);
-
-userController.get('/auth/kakao', passport.authenticate('kakao'));
-
-userController.get(
-  '/auth/kakao/callback',
-  passport.authenticate('kakao'),
-  async (req, res) => {
-    const { accessToken, refreshToken } = await userService.generateJWT(
-      req.user.id,
-    );
-    res.cookie('token', refreshToken, {
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true,
-    });
-    res.json({ accessToken });
-  },
-);
-
-userController.get('/auth/naver', passport.authenticate('naver'));
-userController.get(
-  '/auth/naver/callback',
-  passport.authenticate('naver'),
-  async (req, res) => {
-    const { accessToken, refreshToken } = await userService.generateJWT(
-      req.user.id,
-    );
-    res.cookie('token', refreshToken, {
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true,
-    });
-    res.json({ accessToken });
-  },
 );
 
 export default userController;
