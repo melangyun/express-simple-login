@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import express, { json } from 'express';
 import cookieParser from 'cookie-parser';
-import session from 'express-session';
 
 import userController from './controller/userController.js';
 import productController from './controller/productController.js';
@@ -13,14 +12,6 @@ const port = process.env.PORT ?? 3000;
 
 app.use(json());
 app.use(cookieParser());
-
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-  }),
-);
 
 // 라우터
 app.use('', userController);
