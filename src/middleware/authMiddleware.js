@@ -1,6 +1,7 @@
 import { expressjwt } from 'express-jwt';
 
 import reviewRepository from '../repository/reviewRepository.js';
+import userRepository from '../repository/userRepository.js';
 
 async function checkReviewAuth(req, _, next) {
   try {
@@ -47,7 +48,17 @@ function checkSessionLogin(req, res, next) {
   if (!req.session?.userId) {
     throwUnauthorizedError();
   }
-  req.user = { id: req.session.userId };
+  const user = userRepository.findById(req.session.userId);
+  if (!user) {
+    throwUnauthorizedError();
+  }
+  req.user = {
+    id: req.session.userId,
+    email: user.email,
+    name: user.name,
+    provider: user.provider,
+    providerId: user.providerId,
+  };
   next();
 }
 
