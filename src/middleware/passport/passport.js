@@ -18,7 +18,7 @@ passport.serializeUser((userId, done) => {
   done(null, userId);
 });
 // 세션에서 추출된 식별자를 사용, 사용자 객체를 검색하고 반환
-// 이전 구현의 authMiddleware의 checkSessionLogin
+// 이전 구현의 authMiddleware의 verifySessionLogin에서
 // req.user = { id: req.session.userId }; 와 동일
 passport.deserializeUser(async (userId, done) => {
   done(null, userId);

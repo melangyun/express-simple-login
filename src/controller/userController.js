@@ -34,7 +34,7 @@ userController.post('/login', async (req, res, next) => {
 
 userController.post(
   '/renew-token',
-  // authMiddleware.checkRefreshToken,
+  // authMiddleware.verifyRefreshToken,
   passport.authenticate('refresh-token', { failureFlash: true }),
   async (req, res, next) => {
     try {

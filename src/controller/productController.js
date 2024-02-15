@@ -8,7 +8,7 @@ const productController = express.Router();
 productController.post(
   '/',
   authMiddleware.passportAuthenticateSession,
-  // authMiddleware.checkSessionLogin,
+  // authMiddleware.verifySessionLogin,
   async (req, res) => {
     const createdProduct = await productService.register(req.body);
     res.send(createdProduct);

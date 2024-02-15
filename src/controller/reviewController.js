@@ -9,7 +9,7 @@ const reviewController = express.Router();
 
 reviewController.post(
   '/',
-  authMiddleware.checkAccessToken,
+  authMiddleware.verifyAccessToken,
   async (req, res, next) => {
     try {
       const createdReview = await reviewService.register({
@@ -43,9 +43,9 @@ reviewController.get('/', async (req, res, next) => {
 
 reviewController.put(
   '/:id',
-  // authMiddleware.checkAccessToken,
+  // authMiddleware.verifyAccessToken,
   passport.authenticate('access-token', { session: false }),
-  authMiddleware.checkReviewAuth,
+  authMiddleware.verifyReviewAuth,
   async (req, res, next) => {
     try {
       const updatedReview = await reviewService.updateReview(
@@ -61,8 +61,8 @@ reviewController.put(
 
 reviewController.delete(
   '/:id',
-  authMiddleware.checkAccessToken,
-  authMiddleware.checkReviewAuth,
+  authMiddleware.verifyAccessToken,
+  authMiddleware.verifyReviewAuth,
   async (req, res, next) => {
     try {
       const deletedReview = await reviewService.deleteReview(req.params.id);

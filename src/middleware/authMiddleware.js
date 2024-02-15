@@ -3,7 +3,7 @@ import { expressjwt } from 'express-jwt';
 import reviewRepository from '../repository/reviewRepository.js';
 import userRepository from '../repository/userRepository.js';
 
-async function checkReviewAuth(req, _, next) {
+async function verifyReviewAuth(req, _, next) {
   try {
     const review = await reviewRepository.getReview(req.params.id);
     if (review.authorId !== req.user.id) {
@@ -16,13 +16,13 @@ async function checkReviewAuth(req, _, next) {
     next(error);
   }
 }
-const checkAccessToken = expressjwt({
+const verifyAccessToken = expressjwt({
   secret: process.env.JWT_SECRET,
   algorithms: ['HS256'],
   requestProperty: 'user',
 });
 
-const checkRefreshToken = expressjwt({
+const verifyRefreshToken = expressjwt({
   secret: process.env.JWT_SECRET,
   algorithms: ['HS256'],
   requestProperty: 'user',
@@ -44,7 +44,7 @@ function passportAuthenticateSession(req, res, next) {
   return next();
 }
 
-function checkSessionLogin(req, res, next) {
+function verifySessionLogin(req, res, next) {
   if (!req.session?.userId) {
     throwUnauthorizedError();
   }
@@ -63,9 +63,9 @@ function checkSessionLogin(req, res, next) {
 }
 
 export default {
-  checkReviewAuth,
-  checkSessionLogin,
-  checkAccessToken,
-  checkRefreshToken,
+  verifyReviewAuth,
+  verifySessionLogin,
+  verifyAccessToken,
+  verifyRefreshToken,
   passportAuthenticateSession,
 };
